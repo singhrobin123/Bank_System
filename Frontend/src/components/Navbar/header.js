@@ -5,15 +5,24 @@ import React, { useState, useEffect } from 'react';
 import './header.css';
 import InfoModel from '../Model/infomodal';
 import ReactDOM from 'react-dom';
+import { useSelector } from 'react-redux';
 
 const Header = (props) => {
     const [name, setName] = useState("");
     const [login, setLogin] = useState(false);
     const [loading, setLoading] = useState(0);
     const navigate = useNavigate();
+    let oldState = props.state;
+    const mystore = useSelector((oldState) => oldState.auth.user);
     useEffect(()=>{
         props.getUser(setDataHandler); 
     },[]);
+    useEffect(()=>{
+        if(mystore.name != null){
+        setLogin(true);
+        setName(mystore.name);
+        }
+    },[mystore]);
 
     const setDataHandler = (nameParam, flag, userType) => {
         if(flag) {
@@ -92,7 +101,7 @@ const Header = (props) => {
 };
 
 const mapStateToProps = state => {
-    return{user:state.auth.user,auth: state.auth}
+    return{user:state.auth.user, state: state}
   }
   const mapDispatchToProps = dispatch => {
     return {
